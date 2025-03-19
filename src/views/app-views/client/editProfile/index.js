@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Avatar, Button, Input, Row, Col, message } from 'antd';
+import { Form, Avatar, Button, Input, Row, Col, Spin } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import Flex from 'components/shared-components/Flex';
@@ -10,7 +10,8 @@ class EditProfile extends Component {
   formRef = React.createRef();
 
   state = {
-    loading: true,
+    loading: true, // Для загрузки данных
+    submitting: false, // Для лоадера при отправке
     avatarUrl: '',
     name: '',
     email: '',
@@ -51,23 +52,20 @@ class EditProfile extends Component {
       })
       .catch(error => {
         console.error("Error loading user data:", error);
-        message.error("Failed to load user data");
         this.setState({ loading: false });
       });
   }
 
-  onFinish = values => {
-    const key = 'updatable';
-    message.loading({ content: 'Updating...', key });
+  onFinish = () => {
+    this.setState({ submitting: true });
     setTimeout(() => {
-      this.setState(values);
-      message.success({ content: 'Profile updated!', key, duration: 2 });
+      this.setState({ submitting: false });
       this.props.history.push('/app/clients/userList');
-    }, 1000);
+    }, 1000); 
   };
 
   render() {
-    const { loading, avatarUrl } = this.state;
+    const { loading, submitting, avatarUrl } = this.state;
 
     if (loading) return <div>Loading...</div>;
 
@@ -77,46 +75,48 @@ class EditProfile extends Component {
           <Avatar size={90} src={avatarUrl} icon={<UserOutlined />} />
         </Flex>
         <div className="mt-4">
-          <Form
-            ref={this.formRef}
-            name="basicInformation"
-            layout="vertical"
-            onFinish={this.onFinish}
-          >
-            <Row gutter={ROW_GUTTER}>
-              <Col xs={24} sm={24} md={12}>
-                <Form.Item label="Name" name="name" rules={[{ required: true }]}>
-                  <Input />
-                </Form.Item>
-              </Col>
-              <Col xs={24} sm={24} md={12}>
-                <Form.Item label="Username" name="userName" rules={[{ required: true }]}>
-                  <Input />
-                </Form.Item>
-              </Col>
-              <Col xs={24} sm={24} md={12}>
-                <Form.Item label="Email" name="email" rules={[{ required: true, type: 'email' }]}>
-                  <Input />
-                </Form.Item>
-              </Col>
-              <Col xs={24} sm={24} md={12}>
-                <Form.Item label="Phone Number" name="phoneNumber">
-                  <Input />
-                </Form.Item>
-              </Col>
-              <Col xs={24} sm={24} md={12}>
-                <Form.Item label="Website" name="website">
-                  <Input />
-                </Form.Item>
-              </Col>
-              <Col xs={24} sm={24} md={12}>
-                <Form.Item label="City" name="city">
-                  <Input />
-                </Form.Item>
-              </Col>
-            </Row>
-            <Button type="primary" htmlType="submit">Save Changes</Button>
-          </Form>
+          <Spin spinning={submitting}> {/* Лоадер при отправке */}
+            <Form
+              ref={this.formRef}
+              name="basicInformation"
+              layout="vertical"
+              onFinish={this.onFinish}
+            >
+              <Row gutter={ROW_GUTTER}>
+                <Col xs={24} sm={24} md={12}>
+                  <Form.Item label="Name" name="name" rules={[{ required: true }]}>
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={24} md={12}>
+                  <Form.Item label="Username" name="userName" rules={[{ required: true }]}>
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={24} md={12}>
+                  <Form.Item label="Email" name="email" rules={[{ required: true, type: 'email' }]}>
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={24} md={12}>
+                  <Form.Item label="Phone Number" name="phoneNumber">
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={24} md={12}>
+                  <Form.Item label="Website" name="website">
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={24} md={12}>
+                  <Form.Item label="City" name="city">
+                    <Input />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Button type="primary" htmlType="submit">Save Changes</Button>
+            </Form>
+          </Spin>
         </div>
       </>
     );
