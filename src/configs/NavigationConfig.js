@@ -1,4 +1,4 @@
-import Icon, { 
+import  { 
   DashboardOutlined,
   ShoppingCartOutlined,
   ShoppingOutlined,
