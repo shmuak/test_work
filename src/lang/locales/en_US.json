@@ -136,6 +136,7 @@
 	"sidenav.systemic": "Systemic",
 	"sidenav.systemic.settings": "Settings",
 	"sidenav.systemic.mobileApplication": "Mobile application",
-	"sidenav.systemic.logs": "Logs"
+	"sidenav.systemic.logs": "Logs",
+	"sidenav.main.scheduler": "Scheduler"
 	
   }
